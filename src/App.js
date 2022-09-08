@@ -1,23 +1,58 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import Square from "./Square";
 
 function App() {
+  const [squares, setSquares] = useState(["", "", "", "", "", "", "", "", ""]);
+  const [player, setPlayer] = useState(true);
+  
+  const handleClick = () => {
+    setSquares(["", "", "", "", "", "", "", "", ""]);
+    setPlayer(true);
+  };
+
+  function calculateWinner(array) {
+    const lines = [
+      [0,1,2],
+      [3,4,5], 
+      [6,7,8],
+      [0,3,6],
+      [1,4,7],
+      [2,5,8], 
+      [2,4,6],
+      [0,4,8],
+    ];
+    for(let i =0; i < lines.length; i++) {
+      const [a,b,c] = lines[i]
+      if(
+        squares[a] &&
+        squares[a] === squares[b] &&
+        squares[a] === squares[c]
+      ) {
+        return `${squares[a]} won!`
+      }
+    }
+    return "who will win?!";
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <span>{calculateWinner(squares)}</span>
+      <div className="container">
+        {squares.map((value, index) => {
+          return (
+            <Square
+            setSquares={setSquares}
+            index={index}
+            squareValue={value}
+            squares={squares}
+            player={player}
+            setPlayer={setPlayer}
+            />
+            );
+          })}
+      </div>
+          <button className="reset" onClick={handleClick}>Reset</button>
     </div>
   );
 }
